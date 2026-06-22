@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Abdul Hamid — Senior Executive, QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ── TOKENS ───────────────────────────────────────────── */
+  :root {
+    --blue-100: #e0f0ff;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --green-400: #34d399;
+    --green-500: #10b981;
+
+    --accent:       var(--blue-500);
+    --accent-light: var(--blue-400);
+    --accent-glow:  rgba(59,130,246,0.18);
+    --accent2:      var(--green-500);
+
+    /* dark */
+    --bg:          #09090b;
+    --bg-card:     #111113;
+    --bg-card2:    #18181b;
+    --border:      rgba(255,255,255,0.07);
+    --text-primary:#f4f4f5;
+    --text-muted:  #71717a;
+    --text-subtle: #a1a1aa;
+
+    --nav-h: 64px;
+    --radius: 16px;
+    --transition: 0.35s cubic-bezier(.22,1,.36,1);
+  }
+  [data-theme="light"] {
+    --bg:          #f8fafc;
+    --bg-card:     #ffffff;
+    --bg-card2:    #f1f5f9;
+    --border:      rgba(0,0,0,0.08);
+    --text-primary:#0f172a;
+    --text-muted:  #64748b;
+    --text-subtle: #475569;
+    --accent-glow: rgba(59,130,246,0.10);
+  }
+
+  /* ── RESET ────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  ul { list-style: none; }
+
+  /* ── SCROLLBAR ─────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+
+  /* ── NAV ──────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 clamp(20px, 5vw, 80px);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    background: rgba(9,9,11,0.72);
+    border-bottom: 1px solid var(--border);
+    transition: background var(--transition);
+  }
+  [data-theme="light"] nav { background: rgba(248,250,252,0.82); }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent-light), var(--green-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .nav-links {
+    display: flex; gap: 32px; align-items: center;
+  }
+  .nav-links a {
+    font-size: 0.875rem; font-weight: 500;
+    color: var(--text-subtle);
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.25s;
+    border-radius: 2px;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+
+  #theme-toggle {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card2);
+    color: var(--text-subtle);
+    cursor: pointer;
+    display: grid; place-items: center;
+    font-size: 1rem;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #theme-toggle:hover { border-color: var(--accent); transform: scale(1.08); }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px;
+    background: none; border: none;
+  }
+  .hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--text-subtle); border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* mobile nav */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: var(--nav-h); left: 0; right: 0;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px clamp(20px,5vw,80px);
+    flex-direction: column; gap: 16px;
+    z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 1rem; font-weight: 500;
+    color: var(--text-subtle);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* ── HERO ─────────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: calc(var(--nav-h) + 60px) clamp(20px,5vw,80px) 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-glow2 {
+    position: absolute; bottom: -150px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 60px; align-items: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent-light);
+    background: var(--accent-glow); border: 1px solid rgba(59,130,246,0.25);
+    padding: 5px 14px; border-radius: 99px;
+    margin-bottom: 24px;
+  }
+  .hero-eyebrow span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  .hero-name .gradient-text {
+    background: linear-gradient(135deg, var(--accent-light) 0%, var(--green-400) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-title {
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    color: var(--text-subtle);
+    font-weight: 400;
+    margin-bottom: 28px;
+  }
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.75;
+    margin-bottom: 40px;
+  }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 10px;
+    font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: all 0.25s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 0 0 rgba(59,130,246,0.4);
+  }
+  .btn-primary:hover {
+    background: var(--blue-600);
+    box-shadow: 0 0 0 6px rgba(59,130,246,0.15);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* avatar */
+  .hero-avatar-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .avatar-ring {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--accent), var(--green-400));
+    box-shadow: 0 0 40px rgba(59,130,246,0.25);
+  }
+  .avatar-inner {
+    width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+    background: var(--bg-card2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .avatar-initials {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.5rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-light), var(--green-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-location {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; color: var(--text-muted);
+  }
+
+  /* ── SECTION BASE ─────────────────────────────────────── */
+  section { padding: 90px clamp(20px,5vw,80px); }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent-light);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 48px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    border-radius: 1px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .section-sub {
+    font-size: 1rem; color: var(--text-muted);
+    max-width: 560px; line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  /* ── ABOUT ────────────────────────────────────────────── */
+  #about { background: var(--bg); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+  }
+  .about-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+  }
+  .about-text {
+    font-size: 1.05rem; color: var(--text-subtle); line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .about-highlight {
+    color: var(--accent-light); font-weight: 600;
+  }
+  .stat-row { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 28px; }
+  .stat {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-light), var(--green-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .trait-list { display: flex; flex-direction: column; gap: 12px; }
+  .trait-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.9rem; color: var(--text-subtle); font-weight: 500;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .trait-item:hover { border-color: var(--accent); transform: translateX(4px); }
+  .trait-icon { font-size: 1.1rem; }
+
+  /* ── EXPERIENCE ───────────────────────────────────────── */
+  #experience { background: var(--bg-card); }
+  .exp-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .exp-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--green-500));
+    border-radius: 3px;
+  }
+  .exp-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 12px;
+    margin-bottom: 8px;
+  }
+  .exp-company {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem; font-weight: 700;
+  }
+  .exp-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 99px;
+    font-size: 0.75rem; font-weight: 600;
+    background: var(--accent-glow);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: var(--accent-light);
+  }
+  .exp-badge-dot { width: 6px; height: 6px; background: var(--green-400); border-radius: 50%; animation: pulse 2s infinite; }
+  .exp-role {
+    font-size: 1rem; color: var(--accent-light); font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .exp-meta {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 0.82rem; color: var(--text-muted);
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .exp-meta-item { display: flex; align-items: center; gap: 5px; }
+
+  .responsibilities {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 28px;
+  }
+  .resp-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 0.9rem; color: var(--text-subtle); line-height: 1.6;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .resp-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); margin-top: 7px; flex-shrink: 0;
+  }
+
+  .exp-projects-title {
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .project-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .project-chip {
+    padding: 6px 14px; border-radius: 8px;
+    font-size: 0.8rem; font-weight: 500;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    color: var(--text-subtle);
+    transition: all 0.2s;
+  }
+  .project-chip:hover { border-color: var(--accent); color: var(--accent-light); }
+
+  /* ── EDUCATION ────────────────────────────────────────── */
+  #education { background: var(--bg); }
+  .edu-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
+  }
+  .edu-icon {
+    width: 72px; height: 72px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--green-500));
+    display: grid; place-items: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+  .edu-degree {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem; font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .edu-field { font-size: 1rem; color: var(--accent-light); font-weight: 500; margin-bottom: 6px; }
+  .edu-meta { font-size: 0.85rem; color: var(--text-muted); }
+
+  /* ── SKILLS ───────────────────────────────────────────── */
+  #skills { background: var(--bg-card); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px;
+  }
+  .skill-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .skill-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px var(--accent-glow);
+  }
+  .skill-icon { font-size: 1.5rem; margin-bottom: 10px; }
+  .skill-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; }
+  .skill-bar-bg {
+    height: 4px; background: var(--bg-card2);
+    border-radius: 4px; overflow: hidden;
+  }
+  .skill-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green-400));
+    border-radius: 4px;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.8s cubic-bezier(.22,1,.36,1);
+  }
+  .skill-card.animated .skill-bar { transform: scaleX(1); }
+
+  /* ── CONTACT ──────────────────────────────────────────── */
+  #contact { background: var(--bg); }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+  .contact-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: flex; align-items: center; gap: 20px;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .contact-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px var(--accent-glow);
+  }
+  .contact-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--green-500));
+    display: grid; place-items: center; font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .contact-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .contact-value { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); word-break: break-all; }
+
+  /* ── FOOTER ───────────────────────────────────────────── */
+  footer {
+    padding: 32px clamp(20px,5vw,80px);
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    font-size: 0.82rem; color: var(--text-muted);
+  }
+  .footer-brand {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-light), var(--green-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* ── SCROLL ANIMATIONS ────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── DIVIDER ─────────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 clamp(20px,5vw,80px);
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-avatar-wrap { order: -1; }
+    .avatar-ring { width: 140px; height: 140px; }
+    .avatar-initials { font-size: 2.5rem; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .edu-card { grid-template-columns: 1fr; text-align: center; }
+    .edu-icon { margin: 0 auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">AH.</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#education">Education</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#experience" onclick="closeMobile()">Experience</a>
+  <a href="#education" onclick="closeMobile()">Education</a>
+  <a href="#skills" onclick="closeMobile()">Skills</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero" id="home">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span></span>Open to Opportunities
+      </div>
+      <h1 class="hero-name">
+        Abdul<br /><span class="gradient-text">Hamid</span>
+      </h1>
+      <p class="hero-title">Senior Executive, Quality Assurance</p>
+      <p class="hero-desc">
+        A <strong>learning-minded</strong> pharmaceutical QA professional with 7+ years of experience ensuring product quality and compliance at Opsonin Pharma. Always adapting, always growing — bringing precision and curiosity to every challenge.
+      </p>
+      <div class="hero-actions">
+        <a href="#experience" class="btn btn-primary">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          View Experience
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+          Get in Touch
+        </a>
+      </div>
+    </div>
+    <div class="hero-avatar-wrap">
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <span class="avatar-initials">AH</span>
+        </div>
+      </div>
+      <div class="hero-location">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Rupatali, Barishal, Bangladesh
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ABOUT ─────────────────────────────────────────────── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About Me</div>
+    <h2 class="section-title">Quality. Precision. Growth.</h2>
+    <p class="section-sub">A dedicated QA professional committed to continuous learning and excellence in pharmaceutical quality assurance.</p>
+
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <p class="about-text">
+          I am a <span class="about-highlight">always learning-minded</span> professional who quickly adapts to new challenges and technologies. My career in pharmaceutical quality assurance has been defined by a deep commitment to process integrity and a hunger for knowledge that keeps me at the forefront of the field.
+        </p>
+        <p class="about-text">
+          With over <span class="about-highlight">7 years at Opsonin Pharma Limited</span>, I have built expertise in quality control systems, regulatory compliance, and cross-functional collaboration — turning QA from a checkpoint into a culture.
+        </p>
+        <div class="stat-row">
+          <div class="stat">
+            <span class="stat-num">7+</span>
+            <span class="stat-label">Years Experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">M.Pharm</span>
+            <span class="stat-label">Academic Background</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">QA</span>
+            <span class="stat-label">Specialization</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <div class="trait-list">
+          <div class="trait-item">
+            <span class="trait-icon">🧠</span> Lifelong learner — always adopting what's new
+          </div>
+          <div class="trait-item">
+            <span class="trait-icon">🔬</span> Pharma QA & compliance expertise
+          </div>
+          <div class="trait-item">
+            <span class="trait-icon">📋</span> Regulatory standards & documentation
+          </div>
+          <div class="trait-item">
+            <span class="trait-icon">🤝</span> Cross-functional team collaboration
+          </div>
+          <div class="trait-item">
+            <span class="trait-icon">📈</span> Continuous process improvement mindset
+          </div>
+          <div class="trait-item">
+            <span class="trait-icon">⚗️</span> M.Pharm scientific foundation
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── EXPERIENCE ─────────────────────────────────────────── -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="section-label">Work Experience</div>
+    <h2 class="section-title">Career Journey</h2>
+    <p class="section-sub">Building quality from the ground up — seven years of pharmaceutical excellence.</p>
+
+    <div class="exp-card reveal">
+      <div class="exp-header">
+        <div>
+          <div class="exp-company">Opsonin Pharma Limited</div>
+        </div>
+        <div class="exp-badge">
+          <span class="exp-badge-dot"></span> Currently Employed
+        </div>
+      </div>
+      <div class="exp-role">Senior Executive — Quality Assurance (QA)</div>
+      <div class="exp-meta">
+        <div class="exp-meta-item">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          July 2018 — Present
+        </div>
+        <div class="exp-meta-item">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          7+ Years
+        </div>
+        <div class="exp-meta-item">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Bangladesh
+        </div>
+      </div>
+
+      <div class="responsibilities">
+        <div class="resp-item">
+          <span class="resp-dot"></span>
+          Oversee and implement quality assurance protocols across manufacturing, packaging, and distribution processes to ensure GMP compliance.
+        </div>
+        <div class="resp-item">
+          <span class="resp-dot"></span>
+          Conduct internal audits, root-cause analyses, and CAPA (Corrective and Preventive Action) investigations to maintain product quality standards.
+        </div>
+        <div class="resp-item">
+          <span class="resp-dot"></span>
+          Review and approve batch records, SOPs, specifications, and validation documents to meet regulatory requirements.
+        </div>
+        <div class="resp-item">
+          <span class="resp-dot"></span>
+          Collaborate with cross-functional teams including production, R&D, and regulatory affairs to resolve quality issues proactively.
+        </div>
+        <div class="resp-item">
+          <span class="resp-dot"></span>
+          Support new product launches and technology transfers by providing QA guidance throughout the development lifecycle.
+        </div>
+      </div>
+
+      <div class="exp-projects-title">Key Areas & Projects</div>
+      <div class="project-chips">
+        <span class="project-chip">GMP Compliance</span>
+        <span class="project-chip">Batch Record Review</span>
+        <span class="project-chip">CAPA Management</span>
+        <span class="project-chip">Internal Audits</span>
+        <span class="project-chip">SOP Development</span>
+        <span class="project-chip">Validation Protocols</span>
+        <span class="project-chip">Regulatory Affairs</span>
+        <span class="project-chip">Quality Systems</span>
+        <span class="project-chip">Risk Assessment</span>
+        <span class="project-chip">Process Improvement</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── EDUCATION ──────────────────────────────────────────── -->
+<section id="education">
+  <div class="section-inner">
+    <div class="section-label">Education</div>
+    <h2 class="section-title">Academic Background</h2>
+    <p class="section-sub">A strong scientific foundation supporting every quality decision.</p>
+
+    <div class="edu-card reveal">
+      <div class="edu-icon">🎓</div>
+      <div>
+        <div class="edu-degree">Master of Pharmacy</div>
+        <div class="edu-field">M.Pharm — Pharmaceutical Sciences</div>
+        <div class="edu-meta">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          Bangladesh &nbsp;·&nbsp; Pharmacy Discipline
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SKILLS ─────────────────────────────────────────────── -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-label">Core Skills</div>
+    <h2 class="section-title">Areas of Expertise</h2>
+    <p class="section-sub">Pharmaceutical QA competencies built over 7+ years of hands-on practice.</p>
+
+    <div class="skills-grid">
+      <div class="skill-card reveal" data-progress="0.92">
+        <div class="skill-icon">🔬</div>
+        <div class="skill-name">Quality Assurance Systems</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.92"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-1" data-progress="0.9">
+        <div class="skill-icon">📋</div>
+        <div class="skill-name">GMP / Regulatory Compliance</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.90"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2" data-progress="0.88">
+        <div class="skill-icon">🔍</div>
+        <div class="skill-name">Audit & Inspection</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.88"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3" data-progress="0.85">
+        <div class="skill-icon">📊</div>
+        <div class="skill-name">CAPA & Root Cause Analysis</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.85"></div></div>
+      </div>
+      <div class="skill-card reveal" data-progress="0.87">
+        <div class="skill-icon">📝</div>
+        <div class="skill-name">Documentation & SOP Writing</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.87"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-1" data-progress="0.83">
+        <div class="skill-icon">⚗️</div>
+        <div class="skill-name">Pharmaceutical Sciences</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.83"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2" data-progress="0.80">
+        <div class="skill-icon">🤝</div>
+        <div class="skill-name">Cross-functional Collaboration</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.80"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3" data-progress="0.88">
+        <div class="skill-icon">🧠</div>
+        <div class="skill-name">Continuous Improvement</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="--w:0.88"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CONTACT ────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title">Let's Connect</h2>
+    <p class="section-sub">Whether it's a collaboration, opportunity, or simply a conversation about pharmaceutical QA — reach out.</p>
+
+    <div class="contact-grid">
+      <a href="mailto:abdulhamid21.iiuc@gmail.com" class="contact-card reveal">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">abdulhamid21.iiuc@gmail.com</div>
+        </div>
+      </a>
+
+      <div class="contact-card reveal reveal-delay-1">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">Rupatali, Barishal, Bangladesh</div>
+        </div>
+      </div>
+
+      <div class="contact-card reveal reveal-delay-2">
+        <div class="contact-icon">🏢</div>
+        <div>
+          <div class="contact-label">Current Employer</div>
+          <div class="contact-value">Opsonin Pharma Limited</div>
+        </div>
+      </div>
+
+      <div class="contact-card reveal reveal-delay-3">
+        <div class="contact-icon">💼</div>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-value">Connect on LinkedIn</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <span class="footer-brand">Abdul Hamid</span>
+  <span>Senior Executive, QA — Opsonin Pharma Limited</span>
+  <span>© 2025 · Built with precision</span>
+</footer>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────── -->
+<script>
+  /* THEME TOGGLE */
+  const toggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  let dark = true;
+  toggle.addEventListener('click', () => {
+    dark = !dark;
+    html.setAttribute('data-theme', dark ? 'dark' : 'light');
+    toggle.textContent = dark ? '🌙' : '☀️';
+  });
+
+  /* HAMBURGER */
+  const hb = document.getElementById('hamburger');
+  const mm = document.getElementById('mobile-menu');
+  hb.addEventListener('click', () => mm.classList.toggle('open'));
+  function closeMobile() { mm.classList.remove('open'); }
+
+  /* SCROLL ANIMATIONS */
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => obs.observe(el));
+
+  /* SKILL BAR ANIMATIONS */
+  const skillCards = document.querySelectorAll('.skill-card');
+  const skillObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('animated');
+        skillObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  skillCards.forEach(c => skillObs.observe(c));
+
+  /* SMOOTH NAV HIGHLIGHT */
+  const sections = document.querySelectorAll('section[id]');
+  const navAs = document.querySelectorAll('.nav-links a');
+  const secObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navAs.forEach(a => a.style.color = '');
+        const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+        if (active) active.style.color = 'var(--accent-light)';
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => secObs.observe(s));
+</script>
+</body>
+</html>
